@@ -1,0 +1,27 @@
+###### CRIACAO DA IMAGEM E SUBIDA NO K8S ######
+# Para validaçao do teste assumo que o docker esteja instalado na máquina e exista uma conta na aws com um registry nomeado "nginx" criado e as credenciais configuradas. Além disso subentende-se que exista um cluster de kubernetes para criarmos os recursos.
+
+# Criação da imagem docker
+docker build -t nginx_with_desafio .
+
+# Login na aws
+$(aws ecr get-login --no-include-email --region us-east-1)
+
+# Criação da tag
+docker tag nginx_with_desafio:latest URL_REGISTRY/nginx:latest
+
+# Push para a AWS
+docker push URL_REGISTRY/nginx:latest
+
+# Alter no yaml nginx.yaml o valor URL_REGISTRY para o registry onde a imagem foi armazenada.
+
+# Crie os recursos no cluster
+kubectl create -f nginx.yaml
+
+# Após alguns minutos o service irá gerar um LoadBalancer. Utilize a url gerada para acessar o nginx e baixar o arquivo no seguinte caminho: http://URL/desafio ou usando o comando: wget http://URL/desafio/desafio.tar
+
+######## EXECUCAO DO SCRIPT DE DOWNLOAD ########
+# Para a execução do script de download é necessário instalar a biblioteca wget do pyhton3. Com o nginx no ar, altere o valor URL no script nomeado download_tar.py com o valor do loadbalancer criado e execute o script: "python3 download_tar.py". O arquivo será baixado no /tmp/.
+
+######## EXECUCAO DO SCRIPT QUE IMPRIME ABC ########
+# Para a execucao do script que imprime 'abc' é necessário instalar as bibliotecas tarfile e os. Com o arquivo baixado em /tmp/, execute o comando "python3 imprime_ABC.py"

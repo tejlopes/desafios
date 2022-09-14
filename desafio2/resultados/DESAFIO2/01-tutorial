@@ -1,0 +1,24 @@
+###### CRIACAO DA IMAGEM E SUBIDA NO K8S ######
+# Para validaçao do teste assumo que o docker esteja instalado na máquina e exista uma conta na aws com um registry nomeado "nginx_desafio2" criado e as credenciais configuradas. Além disso subentende-se que exista um cluster de kubernetes para criarmos os recursos.
+
+# Criação da imagem docker
+docker build -t nginx_with_desafio2 .
+
+# Login na aws
+$(aws ecr get-login --no-include-email --region us-east-1)
+
+# Criação da tag
+docker tag nginx_with_desafio2:latest URL_REGISTRY/nginx_desafio2:latest
+
+# Push para a AWS
+docker push URL_REGISTRY/nginx_desafio2:latest
+
+# Alter no yaml nginx_desafio2.yaml o valor URL_REGISTRY para o registry onde a imagem foi armazenada.
+
+# Crie os recursos no cluster
+kubectl create -f nginx_desafio2.yaml
+
+######## CHAMADA ########
+# Para realizar as chamadas basta executar o seguinte comando:
+curl http://URL_LOADBALANCER/desafio1
+curl http://URL_LOADBALACNER/desafio2

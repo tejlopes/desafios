@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-server
+  name: nginx-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-server
+  template:
+    metadata:
+      labels:
+        app: nginx-server
+    spec:
+      containers:
+      - image: URL_REGISTRY/nginx:latest
+        imagePullPolicy: IfNotPresent
+        name: nginx-server
+        ports:
+        - containerPort: 27017
+          name: nginx-server
+          protocol: TCP
+        resources: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+  labels:
+    app: nginx-server
+  name: nginx-server-service
+spec:
+  ports:
+  - name: nginx-server
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx-server
+  sessionAffinity: None
+  type: LoadBalancer

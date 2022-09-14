@@ -1,0 +1,35 @@
+{
+    "agent": {
+      "metrics_collection_interval": 10
+    },
+    "metrics": {
+      "metrics_collected": {
+        "disk": {
+          "resources": ["/", "/tmp"],
+          "measurement": ["disk_used_percent"],
+          "ignore_file_system_types": ["sysfs", "devtmpfs"]
+        },
+        "mem": {
+          "measurement": ["mem_available_percent"]
+        },
+        "swap": {
+          "measurement": [
+            "swap_used",
+            "swap_free",
+            "swap_used_percent"
+          ]
+        },
+        "cpu": {
+          "resources": [
+            "*"
+          ],
+          "measurement": [
+            {"name": "cpu_usage_idle", "rename": "CPU_USAGE_IDLE", "unit": "Percent"},
+            {"name": "cpu_usage_nice", "unit": "Percent"}, 
+            "cpu_usage_guest"
+          ]
+      },
+      "aggregation_dimensions": [["InstanceId", "InstanceType"], ["InstanceId"]]
+    }
+  }
+}

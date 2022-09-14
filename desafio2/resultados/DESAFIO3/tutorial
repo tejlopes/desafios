@@ -1,0 +1,22 @@
+###### CRIACAO DA IMAGEM E SUBIDA NO DOCKER ######
+# Para validaçao do teste assumo que o docker esteja instalado na máquina.
+
+# Criação da imagem docker do app python
+# Entre na pasta app_python e gere a imagem
+docker build -t app_python .
+
+# Suba a imagem
+docker run --name app_python -p 8080:8080 -d app_python
+
+# Criação da imagem docker do nginx
+# Entre na pasta nginx e gere a imagem
+docker build -t nginx_desafio3 .
+
+# Suba a imagem do nginx
+docker run --name nginx_desafio3 -p 80:80 -d nginx_desafio3
+
+# Veja que o o retorno do ngnix é a saída que a aplicação python retorna:
+curl http://localhost
+
+# Veja também que é possível ter o retorno direto da api python
+curl http://localhost:8080
